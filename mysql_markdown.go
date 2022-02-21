@@ -265,23 +265,26 @@ func main() {
 
 		// markdown table header
 		tableContent += "\n" +
-			"| 序号 | 名称 | 描述 | 类型 | 键 | 为空 | 额外 | 默认值 |\n" +
-			"| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |\n"
+			"| 字段 | 类型  | 空   | 默认 | 注释 |\n" +
+			"| ---- | ---- | ---- | ---- | ---- |\n"
 		var columnInfo, columnInfoErr = queryTableColumn(db, *database, table.Name)
 		if columnInfoErr != nil {
 			continue
 		}
 		for _, info := range columnInfo {
+			var isNullable string
+			if info.IsNullable == "NO" {
+				isNullable = "否"
+			} else {
+				isNullable = "是"
+			}
 			tableContent += fmt.Sprintf(
-				"| %d | `%s` | %s | %s | %s | %s | %s | %s |\n",
-				info.OrdinalPosition,
+				"| %s | %s | %s | %s | %s |\n",
 				info.ColumnName,
-				strings.ReplaceAll(strings.ReplaceAll(info.ColumnComment.String,"|","\\|"), "\n", ""),
 				info.ColumnType,
-				info.ColumnKey.String,
-				info.IsNullable,
-				info.Extra.String,
+				isNullable,
 				info.ColumnDefault.String,
+				strings.ReplaceAll(strings.ReplaceAll(info.ColumnComment.String,"|","\\|"), "\n", ""),
 			)
 		}
 		tableContent += "\n\n"
