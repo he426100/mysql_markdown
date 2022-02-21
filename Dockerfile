@@ -9,3 +9,4 @@ RUN chmod a+x /usr/local/sbin/mysql_markdown && \
 
 WORKDIR /data
 ENTRYPOINT [ "/usr/local/sbin/mysql_markdown" ]
+CMD [ "--help" ]
